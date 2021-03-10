@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhang.crm.workbench.dao.CustomerDao">
+	
+  	<select id="getCustomerByName" resultType="Customer">
+        select * from tbl_customer where name = #{company}
+    </select>
+
+    <insert id="save">
+        insert into tbl_customer(
+        id,
+        owner,
+        name,
+        website,
+        phone,
+        createBy,
+        createTime,
+        contactSummary,
+        nextContactTime,
+        description,
+        address)
+        values(
+        #{id},
+        #{owner},
+        #{name},
+        #{website},
+        #{phone},
+        #{createBy},
+        #{createTime},
+        #{contactSummary},
+        #{nextContactTime},
+        #{description},
+        #{address}
+        )
+    </insert>
+
+    <select id="getCustomerName" resultType="String">
+        select name from tbl_customer where name like '%' #{name} '%'
+    </select>
+
+    <select id="getTotalByCondition" resultType="int">
+        select count(*)
+        from tbl_customer c
+        join tbl_user u
+        on c.owner = u.id
+        <where>
+            <if test="name != null and name != ''">
+                c.name like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner != ''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="phone != null and phone != ''">
+                and c.phone like '%' #{phone} '%'
+            </if>
+            <if test="website != null and website != ''">
+                and c.website like '%' #{website} '%'
+            </if>
+        </where>
+    </select>
+
+    <select id="getCustomerListByCondition" resultType="Customer">
+        select c.id, c.name, u.name as owner,c.phone,c.website
+        from tbl_customer c
+        join tbl_user u
+        on c.owner = u.id
+        <where>
+            <if test="name != null and name != ''">
+                c.name like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner != ''">
+                and u.name like '%' #{owner} '%'
+            </if>
+            <if test="phone != null and phone != ''">
+                and c.phone like '%' #{phone} '%'
+            </if>
+            <if test="website != null and website != ''">
+                and c.website like '%' #{website} '%'
+            </if>
+        </where>
+        limit #{skipCount},#{pageSize}
+    </select>
+
+    <insert id="saveCustomerInfo">
+        insert into tbl_customer(
+            id,owner,name,website,phone,createBy,createTime,
+            contactSummary,
+            nextContactTime,
+            description,
+            address
+        ) values(
+            #{id},
+            #{owner},
+            #{name},
+            #{website},
+            #{phone},
+            #{createBy},
+            #{createTime},
+            #{contactSummary},
+            #{nextContactTime},
+            #{description},
+            #{address}
+        )
+    </insert>
+
+    <select id="getCustomerInfoById" resultType="Customer">
+        select * from tbl_customer where id = #{id}
+    </select>
+
+    <update id="updateCustomerList">
+        update
+            tbl_customer
+        set
+            owner = #{owner},
+            name = #{name},
+            website = #{website},
+            phone = #{phone},
+            editBy = #{editBy},
+            editTime = #{editTime},
+            contactSummary = #{contactSummary},
+            nextContactTime = #{nextContactTime},
+            description = #{description},
+            address = #{address}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCustomerListInfo">
+        delete from
+            tbl_customer
+        where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="showCustomerDetailInfo" resultType="Customer">
+        select
+            customer.id,
+            user.name as owner,
+            customer.name,
+            customer.website,
+            customer.phone,
+            customer.createBy,
+            customer.createTime,
+            customer.editBy,
+            customer.editTime,
+            customer.contactSummary,
+            customer.nextContactTime,
+            customer.description,
+            customer.address
+        from tbl_customer customer
+        join tbl_user user
+        on customer.owner = user.id
+        where customer.id = #{id}
+    </select>
+
+    <select id="getCustomerIdByCustomerName" resultType="Customer">
+        select * from tbl_customer where name = #{customerName}
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

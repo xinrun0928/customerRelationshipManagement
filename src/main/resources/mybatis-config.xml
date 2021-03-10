@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+   <!--引入链接数据库的配置文件-->
+  <properties resource="jdbc.properties"/>
+
+  <typeAliases>
+      <!--将以下包中的实体类命简写别名-->
+      <package name="com.zhang.crm.settings.domain"/>
+      <package name="com.zhang.crm.workbench.domain"/>
+  </typeAliases>
+
+  <!--配置数据源-->
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC"/>
+      <dataSource type="POOLED">
+        <property name="driver" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.user}"/>
+        <property name="password" value="${jdbc.password}"/>
+      </dataSource>
+    </environment>
+  </environments>
+
+  <mappers>
+      <!--扫描以下包中的sql映射文件-->
+      <package name="com.zhang.crm.settings.dao"/>
+      <package name="com.zhang.crm.workbench.dao"/>
+  </mappers>
+</configuration>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

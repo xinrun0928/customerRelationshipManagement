@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhang.crm.workbench.dao.ClueRemarkDao">
+
+    <select id="getListByClueId" resultType="ClueRemark">
+        select * from tbl_clue_remark where clueId=#{clueId}
+    </select>
+
+
+    <delete id="delete">
+        delete from tbl_clue_remark where id = #{id}
+    </delete>
+
+    <select id="getRemarkCountByClueids" resultType="int">
+        select count(*) from tbl_clue_remark
+        where clueId in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <delete id="deleteByClueids">
+        delete from tbl_clue_remark
+        where clueId in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteRemarkInfo">
+        delete from tbl_clue_remark where id = #{id}
+    </delete>
+
+    <insert id="saveRemarkInfo">
+        insert into tbl_clue_remark(
+            id,
+            noteContent,
+            createBy,
+            createTime,
+            editBy,
+            editFlag,
+            clueId
+        ) values (
+            #{id},
+            #{noteContent},
+            #{createBy},
+            #{createTime},
+            #{editBy},
+            #{editFlag},
+            #{clueId}
+        )
+    </insert>
+
+    <select id="getRemarkListByClueId" resultType="ClueRemark">
+        select * from tbl_clue_remark where clueId = #{clueId}
+    </select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

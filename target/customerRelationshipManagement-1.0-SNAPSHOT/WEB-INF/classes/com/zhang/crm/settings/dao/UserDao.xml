@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zhang.crm.settings.dao.UserDao">
+
+	<select id="login" resultType="User">
+        select * from tbl_user where loginAct = #{loginAct} and loginPwd = #{loginPwd}
+    </select>
+
+    <!--获取tbl_user表中的所有数据-->
+    <select id="getUserList" resultType="User">
+        select * from tbl_user
+    </select>
+
+    <select id="getUserByIdAndPassword" resultType="User">
+        select * from tbl_user where id = #{id} and loginPwd = #{oldPwd}
+    </select>
+
+    <update id="updatePassword">
+        update tbl_user set loginPwd = #{newPwd} where id = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhang.crm.workbench.dao.ActivityDao">
+
+    <!--添加市场活动-->
+    <insert id="save">
+        insert into
+          tbl_activity(id, owner, name, startDate, endDate, cost, description, createTime, createBy)
+        value(
+          #{id},#{owner},#{name},#{startDate},#{endDate},#{cost},#{description},#{createTime},#{createBy}
+        )
+    </insert>
+
+    <!--查询总记录条数-->
+    <select id="getTotalByCondition" resultType="int">
+        select count(*)
+        from tbl_activity activity
+        join tbl_user user
+        on activity.owner = user.id
+        <where>
+            <if test="name != null and name != ''">
+                activity.name like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner != ''">
+                and user.name like '%' #{owner} '%'
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and activity.startDate &gt; #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and activity.endDate &lt; #{endDate}
+            </if>
+        </where>
+    </select>
+
+    <select id="getActivityListByCondition" resultType="Activity">
+        select activity.id, activity.name, user.name as owner, activity.startDate, activity.endDate
+        from tbl_activity activity join tbl_user user on activity.owner = user.id
+        <where>
+            <if test="name != null and name != ''">
+                activity.name like '%' #{name} '%'
+            </if>
+            <if test="owner != null and owner != ''">
+                and user.name like '%' #{owner} '%'
+            </if>
+            <if test="startDate != null and startDate != ''">
+                and activity.startDate &gt; #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                and activity.endDate &lt; #{endDate}
+            </if>
+        </where>
+        order by activity.createTime desc
+        limit #{skipCount},#{pageSize}
+    </select>
+
+    <delete id="delete">
+        delete from tbl_activity
+        where id in
+        <foreach collection="array" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getById" resultType="Activity">
+        select * from tbl_activity where id = #{id}
+    </select>
+
+    <update id="update">
+        update
+          tbl_activity
+        set
+          owner=#{owner},
+          name=#{name},
+          startDate=#{startDate},
+          endDate=#{endDate},
+          cost=#{cost},
+          description=#{description},
+          editTime=#{editTime},
+          editBy=#{editBy}
+        where id=#{id}
+    </update>
+
+    <select id="detailById" resultType="Activity">
+        select
+          a.id, u.name as owner, a.name, a.startDate, a.endDate, a.cost, a.description, a.createTime, a.createBy,
+          a.editTime, a.editBy
+        from tbl_activity a
+        join tbl_user u
+        on a.owner = u.id
+        where a.id = #{id}
+    </select>
+
+    <select id="getActivityListByClueId" resultType="Activity">
+        select c.id as id, a.name, a.startDate, a.endDate,u.name as owner
+        from tbl_activity a
+        join tbl_user u
+        on a.owner = u.id
+        join tbl_clue_activity_relation c
+        on a.id = c.activityId
+        where c.clueId = #{clueId}
+    </select>
+
+
+    <select id="getActivityListByNameAndNotByClueId" resultType="Activity">
+        select a.id, a.name, a.startDate, a.endDate,u.name as owner
+        from tbl_activity a
+        join tbl_user u
+        on a.owner=u.id
+        where a.name like '%' #{aname} '%' and a.id not in(
+          select activityId
+          from tbl_clue_activity_relation
+          where clueId=#{clueId}
+        )
+    </select>
+
+    <select id="getActivityListByName" resultType="Activity">
+        select a.id,a.name,a.startDate,a.endDate,u.name as owner
+        from tbl_activity a
+        join tbl_user u
+        on a.owner = u.id
+        where a.name like '%' #{activityName} '%'
+    </select>
+
+    <update id="updateDetailPageActivityList">
+        update
+          tbl_activity
+        set
+          owner=#{owner},
+          name=#{name},
+          startDate=#{startDate},
+          endDate=#{endDate},
+          cost=#{cost},
+          description=#{description},
+          startDate=#{startDate},
+          endDate=#{endDate},
+          editTime=#{editTime},
+          editBy=#{editBy}
+        where id=#{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from tbl_activity where id = #{activityId}
+    </delete>
+
+    <select id="getActivityList" resultType="Activity">
+        select
+            a.id,
+            u.name as owner,
+            a.name,
+            a.startDate,
+            a.endDate,
+            a.cost,
+            a.description,
+            a.createTime,
+            a.createBy
+        from tbl_activity a
+        join tbl_user u
+        on a.owner = u.id
+    </select>
+
+    <select id="searchActivityListByName" resultType="Activity">
+        select
+            a.id,
+            u.name as owner,
+            a.name,
+            a.startDate,
+            a.endDate,
+            a.cost,
+            a.description,
+            a.createTime,
+            a.createBy
+        from tbl_activity a
+        join tbl_user u
+        on a.owner = u.id
+        where a.name like '%' #{name} '%'
+        <!--<where>-->
+            <!--<if test="a.name != null and a.name != ''">-->
+                <!--a.name like '%' #{name} '%'-->
+            <!--</if>-->
+        <!--</where>-->
+    </select>
+
+    <select id="getActivityNameByActivityId" resultType="Activity">
+        select * from tbl_activity where id = #{id}
+    </select>
+
+</mapper>
